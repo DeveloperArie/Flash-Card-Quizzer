@@ -1,21 +1,102 @@
-#root {
-  padding: 2rem;
-  text-align: center;
-  background: purple;
+#root{
+  width: 100%;
+  height: 100vh;
 }
 body {
+  text-align: center;
+  background-color: purple;
+}
+.App{
   background: purple;
+  margin: 0;
+}
+.cards {
+  display: grid;
+  width: 1500px;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 10px;
+  
+  
+}
+.card {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 300px;
+  background: white;
+  border: solid 1px black;
+  border-radius: 5px;
+  color: black;
+  transform: perspective(1000px);
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+  
+}
+.front {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transform: rotateY(0deg);
 }
 
-.App {
+.back {
+  background-color: yellowgreen;
+  color: white;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+}
+.cardContent {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+input {
+  color: black; 
+}
+.card:hover {
+  box-shadow: 0 0 5px 2px black;
+  cursor: pointer;
+}
+.card.flip {
+  transform: rotateY(180deg);
+}
+.pageContainer{
+  margin-top: 0;
+  display: flex;
+  justify-content: center;
+  padding: 2%;
+  
+}
+.pageTwoContainer{
+  color: white;
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   
 }
 
+
+.cardContainer{
+  display: flex;
+  justify-content: center;
+}
 .decks{
   display: grid;
-  width: 1000px;
+  width: 1500px;
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 10px;
+
 }
 .deck {
   position: relative;
@@ -23,17 +104,23 @@ body {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 200px;
+  height: 300px;
   background: white;
   border: solid 1px black;
   border-radius: 5px;
 
 }
-.deck:hover{
-  background-color: black;
+.deck:hover {
+  background-color: lightgrey;
   color:white;
   cursor: pointer;
+  box-shadow: 0 0 5px 2px black;
 
+
+}
+.deck:hover .newDeckBtn{
+  color:white;
+  cursor: pointer;
 
 }
 
@@ -42,4 +129,51 @@ body {
   position: absolute;
   top: 2%;
   right: 4%;
+}
+
+.header{
+  background-color: yellowgreen;
+  color: white;
+  width: 100%;
+  height: 80px;
+  text-align: center;
+  margin: 0 auto;
+  
+}
+.container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 20px;
+  margin-right: 20px;
+  height: 100%;
+}
+.signUp{
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.deckContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  
+}
+.cardContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  
+}
+
+
+.newDeckBtn{
+  color: blue;
+  font-size: 50px;
+  
+}
+
+.err {
+  color: red;
 }

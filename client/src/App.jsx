@@ -1,55 +1,56 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import { Link } from 'react-router-dom'
-import { deleteDeck } from './api/deleteDeck'
-import { getDecks } from './api/getDecks'
-import { createDeck } from './api/createDeck'
+import React from 'react'
+
+import './index.css'
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+
+import Deck from './components/Deck.jsx';
+import { Header } from './components/Header.jsx';
+import Register from './pages/Register.jsx';
+import Welcome from './pages/Welcome.jsx';
+import Login from './pages/Login';
+import Decks from './components/Decks.jsx'
+
+export const CredentialsContext = React.createContext()
 
 function App() {
-  const [decks, setDecks] = useState([])
-  const [title, setTitle] = useState('')
 
-  async function handleCreateDeck(e){
-    e.preventDefault()
-    await createDeck(title)
-    setTitle('')
-  }
+const [credentials, setCredentials] = useState(null)
 
-  async function handleDeleteDeck(deckId){
-    await deleteDeck(deckId)
-  }
-
-  useEffect(() => {
-    async function fetchDecks() {
-      const newDecks = await getDecks()
-      setDecks(newDecks)
-    }
-    fetchDecks()
+const router = createBrowserRouter([
+  {
+    path: "/register",
+    element: <Register setCredentials={setCredentials}/>
+  },
+  {
+    path: "/login",
+    element: <Login setCredentials={setCredentials}/>
+  },
+  {
+    path: "/",
+    element: <Welcome credentials={credentials}/>,
+  },
+  {
+    path: "/decks",
+    element: <Decks credentials={credentials}/>,
+  },
+  {
+    path: "/decks/:deckId",
+    element: <Deck/>,
+  },
   
-  }, [decks])
+]);
 
   return (
     <div className='App'>
-      <div className='decks'>
-        {
-          decks.map((deck) => (
-            <div className='deck' key={deck._id}>
-              <span className='closeBtn' onClick={() => handleDeleteDeck(deck._id)}>X</span>
-              <Link to={`decks/${deck._id}`}>{deck.title}</Link>
-            </div>
-          ))
-        }
-      </div>
-      <form onSubmit={handleCreateDeck}>
-        <label htmlFor='deck-title'>Deck Title</label>
-        <input 
-          value={title}
-          id='deck-title'
-          onChange={(e) => {
-            setTitle(e.target.value) 
-          }}/>
-          <button>Create Deck</button>
-      </form>
+      <CredentialsContext.Provider value={{credentials, setCredentials}}>
+        <Header credentials={credentials}/>
+        <RouterProvider router={router}/>
+      </CredentialsContext.Provider>
     </div>
   )
 }
