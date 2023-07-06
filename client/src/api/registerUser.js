@@ -13,5 +13,4 @@ export async function registerUser({username, password}){
     })
     
     return response.json()
-    
 }

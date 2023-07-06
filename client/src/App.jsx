@@ -15,44 +15,50 @@ import Welcome from './pages/Welcome.jsx';
 import Login from './pages/Login';
 import Decks from './components/Decks.jsx'
 
-export const CredentialsContext = React.createContext()
+export const CredentialsContext = React.createContext({
+  
+})
 
 function App() {
+    const tokenFromLocalstorage = localStorage.getItem("token") || "";
+    // credentials means the token
+    // TODO refactor it to the user object soon.
+    const [token, setToken] = useState(tokenFromLocalstorage)
+    const [username, setUsername] = useState("")
 
-const [credentials, setCredentials] = useState(null)
+    const router = createBrowserRouter([
+      {
+        path: "/signup",
+        element: <Register />
+      },
+      {
+        path: "/login",
+        element: <Login />
+      },
+      {
+        path: "/",
+        element: <Welcome />,
+      },
+      {
+        path: "/decks",
+        element: <Decks />,
+      },
+      {
+        path: "/decks/:deckId",
+        element: <Deck/>,
+      },
+      
+    ]);
 
-const router = createBrowserRouter([
-  {
-    path: "/register",
-    element: <Register setCredentials={setCredentials}/>
-  },
-  {
-    path: "/login",
-    element: <Login setCredentials={setCredentials}/>
-  },
-  {
-    path: "/",
-    element: <Welcome credentials={credentials}/>,
-  },
-  {
-    path: "/decks",
-    element: <Decks credentials={credentials}/>,
-  },
-  {
-    path: "/decks/:deckId",
-    element: <Deck/>,
-  },
-  
-]);
-
-  return (
-    <div className='App'>
-      <CredentialsContext.Provider value={{credentials, setCredentials}}>
-        <Header credentials={credentials}/>
-        <RouterProvider router={router}/>
-      </CredentialsContext.Provider>
-    </div>
-  )
+      return (
+        <div className='App'>
+          <CredentialsContext.Provider value={{token, setToken, username, setUsername}}>
+            <Header />
+            <RouterProvider  router={router}></RouterProvider>
+          </CredentialsContext.Provider>
+        </div>
+      )
 }
+
 
 export default App

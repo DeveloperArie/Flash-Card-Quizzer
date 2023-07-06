@@ -1,7 +1,8 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { useState, useContext } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate,  } from "react-router-dom"
 import { loginUser } from '../api/loginUser'
+import {CredentialsContext} from '../App'
 
 
 export const handleErrors = async (response) => {
@@ -11,49 +12,53 @@ export const handleErrors = async (response) => {
     return response
 }
 
-export default function Login({setCredentials}) {
+export default function Login() {
+    const navigate = useNavigate()
+
+    const credentials = useContext(CredentialsContext)
+    useEffect(() => {
+        if (credentials.token) {
+            navigate("/")
+        }
+
+    }, [credentials])
+
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     
 
-    const navigate = useNavigate()
 
     async function login(e) {
         e.preventDefault()
-        await loginUser({username, password})
-        .then(handleErrors)
-        .then((response) => response.json())
-        .then((data) => {
-            setCredentials({
-                username,
-                password,
-                token: data.token
-            })
-            navigate('/')
-        })
-        .catch((error) => {
-            setError(error.message)
-        })
+        const data = await loginUser({username, password})
+        console.log({data})
+        localStorage.setItem("token", data.token)
+        navigate('/')
     }
 
     
     return (
-        <div>
-            <h1>Login</h1>
+        <div className='loginPage'>
+            <h1 >Log in</h1>
             {<span className="err">{error}</span>}
-            <form onSubmit={login}>
-                <input  
-                    onChange={(e) => setUsername(e.target.value)} 
-                    placeholder="username"/>
-                <br/>
-                <input 
-                    type="password"
-                    onChange={(e) => setPassword(e.target.value)} 
-                    placeholder="password"/>
-                <br/>
-                <button type="submit">Login</button>
-            </form>
+            <div className='loginContainer'>
+                <form onSubmit={login}>
+                    <input  
+                        className='loginInputs'
+                        onChange={(e) => setUsername(e.target.value)} 
+                        placeholder="username"/>
+                    <br/>
+                    <input 
+                        className='loginInputs'
+                        type="password"
+                        onChange={(e) => setPassword(e.target.value)} 
+                        placeholder="password"/>
+                    <br/>
+                    <button className='loginBtn headerBtns' type="submit">Log in</button>
+                </form>
+            </div>
+            
         </div>
     ) 
 }
