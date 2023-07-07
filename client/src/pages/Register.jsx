@@ -2,9 +2,9 @@ import { useState, useContext, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { handleErrors } from "./Login"
 import { registerUser } from "../api/registerUser"
-import {CredentialsContext} from "../App"
+import { CredentialsContext } from "../App"
 
-export default function Register({setCredentials}) {
+export default function Register() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -12,7 +12,7 @@ export default function Register({setCredentials}) {
     const credentials = useContext(CredentialsContext)
     useEffect(() => {
         if (credentials.token) {
-            navigate("/")
+            navigate("/login")
         }
     }, [credentials])
 
@@ -21,17 +21,27 @@ export default function Register({setCredentials}) {
 
     async function register(e) {
         e.preventDefault()
-        const data = await registerUser({username, password})
-        console.log({data})
-        localStorage.setItem("token", data.token);
-        navigate('/')
+        if (!username || !password) {
+            setError("Please enter a username and password.")
+            return
+        }
+        try {
+            const data = await registerUser({username, password})
+            console.log({data})
+            localStorage.setItem("token", data.token);
+            credentials.setUsername(data.user.username)
+            credentials.setToken(data.token)
+        } catch (error) {
+            setError("User already exists or some other error")
+            console.error(error)
+        }
     }
 
     
     return (
         <div className='registerPage'>
             <h1>Sign Up</h1>
-            {<span className="err">{error}</span>}
+            {error && <span className="err">{error}</span>}
             <form onSubmit={register}>
                 <input  
                     className='loginInputs'

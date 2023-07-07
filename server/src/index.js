@@ -12,6 +12,7 @@ import { getDeckCon } from './controllers/getDeckCon.js'
 import { deleteCardCon } from './controllers/deleteCardCon.js'
 import { registerUserCon } from './controllers/registerUserCon.js'
 import { loginUserCon } from './controllers/loginUserCon.js'
+import { userProfileCon } from './controllers/userProfileCon.js'
 
 import jwt from 'jsonwebtoken'
 
@@ -56,6 +57,7 @@ app.delete('/decks/:deckId/cards/:index', deleteCardCon)
 
 app.post('/register', registerUserCon)
 app.post('/login', loginUserCon)
+app.post('/me', userProfileCon)
 
 mongoose.connect(
     process.env.MONGO_URL
@@ -63,5 +65,3 @@ mongoose.connect(
     console.log(`listenting to ${PORT}`)
     app.listen(PORT)
 })
-
-

@@ -18,7 +18,7 @@ export default function Login() {
     const credentials = useContext(CredentialsContext)
     useEffect(() => {
         if (credentials.token) {
-            navigate("/")
+            navigate("/decks")
         }
 
     }, [credentials])
@@ -31,17 +31,28 @@ export default function Login() {
 
     async function login(e) {
         e.preventDefault()
-        const data = await loginUser({username, password})
-        console.log({data})
-        localStorage.setItem("token", data.token)
-        navigate('/')
+        if (!username || !password) {
+            setError("Please enter a username and password.")
+            return
+        }
+        try {
+            const data = await loginUser({username, password})
+            console.log({data})
+            localStorage.setItem("token", data.token)
+            credentials.setUsername(data.user.username)
+            credentials.setToken(data.token)
+            navigate('/decks')
+        } catch (error) {
+            setError("Login failed. Please try again.")
+            console.error(error)
+        }
     }
 
     
     return (
         <div className='loginPage'>
-            <h1 >Log in</h1>
-            {<span className="err">{error}</span>}
+            <h1 >Log In</h1>
+            {error && <span className="err">{error}</span>}
             <div className='loginContainer'>
                 <form onSubmit={login}>
                     <input  
@@ -55,7 +66,7 @@ export default function Login() {
                         onChange={(e) => setPassword(e.target.value)} 
                         placeholder="password"/>
                     <br/>
-                    <button className='loginBtn headerBtns' type="submit">Log in</button>
+                    <button className='loginBtn headerBtns' type="submit">Log In</button>
                 </form>
             </div>
             

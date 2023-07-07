@@ -14,6 +14,9 @@ import Register from './pages/Register.jsx';
 import Welcome from './pages/Welcome.jsx';
 import Login from './pages/Login';
 import Decks from './components/Decks.jsx'
+import {BrowserRouter} from 'react-router-dom';
+import {Routes} from 'react-router-dom';
+import {Route} from 'react-router-dom';
 
 export const CredentialsContext = React.createContext({
   
@@ -21,8 +24,6 @@ export const CredentialsContext = React.createContext({
 
 function App() {
     const tokenFromLocalstorage = localStorage.getItem("token") || "";
-    // credentials means the token
-    // TODO refactor it to the user object soon.
     const [token, setToken] = useState(tokenFromLocalstorage)
     const [username, setUsername] = useState("")
 
@@ -48,13 +49,22 @@ function App() {
         element: <Deck/>,
       },
       
-    ]);
+    ],);
 
       return (
         <div className='App'>
           <CredentialsContext.Provider value={{token, setToken, username, setUsername}}>
-            <Header />
-            <RouterProvider  router={router}></RouterProvider>
+            <BrowserRouter>
+                <Header />
+                <Routes>
+
+                    <Route path='/login' element={<Login />} />
+                    <Route path='/signup' element={<Register />} />
+                    <Route path='/decks' element={<Decks />} />
+                    <Route path='/decks/:deckId' element={<Deck />} />
+
+              </Routes>
+          </BrowserRouter>
           </CredentialsContext.Provider>
         </div>
       )

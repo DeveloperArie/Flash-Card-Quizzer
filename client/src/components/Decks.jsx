@@ -5,13 +5,24 @@ import { deleteDeck } from '../api/deleteDeck'
 import { getDecks } from '../api/getDecks'
 import { createDeck } from '../api/createDeck'
 import {CredentialsContext} from '../App'
+import {useNavigate} from 'react-router-dom'
 
 
 
 function Decks() {
+  const navigate = useNavigate()
   const credentials = useContext(CredentialsContext)
   const [decks, setDecks] = useState([])
   const [title, setTitle] = useState('')
+
+    useEffect(() => {
+        // TODO
+        if (credentials.token) {
+            ;
+        } else {
+            navigate("/login")
+        }
+    }, [credentials])
 
 
   async function handleCreateDeck(e){
@@ -42,9 +53,9 @@ function Decks() {
         <div className='decks'>
           {
             decks.map((deck) => (
-              <div className='deck' key={deck._id}>
-                <span className='closeBtn' onClick={() => handleDeleteDeck(deck._id)}>X</span>
-                <Link to={`/decks/${deck._id}`}>{deck.title}</Link>
+              <div className='deck' key={deck._id} onClick={() => navigate(`/decks/${deck._id}`)}>
+                <span className='closeBtn' onClick={(e) => {e.stopPropagation(); handleDeleteDeck(deck._id)}}>X</span>
+                <span >{deck.title}</span>
               </div>
             ))
           }

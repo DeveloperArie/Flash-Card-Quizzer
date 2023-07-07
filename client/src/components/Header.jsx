@@ -1,17 +1,34 @@
-import {useContext} from "react"
+import {useContext, useEffect} from "react"
 import {useNavigate} from "react-router-dom"
+import {userMe} from "../api/userMe"
 import { CredentialsContext } from "../App"
 
 export function Header() {
-    //const navigate = useNavigate()
+    const navigate = useNavigate()
     const credentials = useContext( CredentialsContext)
     console.log({credentials})
 
     async function logout() {
         localStorage.removeItem("token")
-        alert("Please refresh. Bug will be fixed soon.")
+        credentials.setToken("")
+        credentials.setUsername("")
         navigate("/login")
     }
+
+    useEffect( () => {
+        if (credentials.token) {
+            const f = async () => {try {
+                console.log(credentials.token)
+                const {username} = await userMe(credentials.token)
+                credentials.setUsername(username)
+            } catch(e) {
+                alert(e.message)
+                credentials.setUsername("")
+                credentials.setToken("")
+            }};
+            f();
+        }
+    }, [credentials])
 
     return (
         <div className="header">
@@ -25,8 +42,8 @@ export function Header() {
             </>: <>
 
                 <div className="signUp">
-                    <button className="headerBtns" onClick={() => navigate("/login")}>Log in</button>
-                    <button className="headerBtns" onClick={() => navigate("/signup")}>Sign up</button>
+                    <button className="headerBtns" onClick={() => navigate("/login")}>Log In</button>
+                    <button className="headerBtns" onClick={() => navigate("/signup")}>Sign Up</button>
                 </div>
             </>}
             </div>
