@@ -13,7 +13,8 @@ export async function loginUserCon(req, res){
     } else {
         const userObject = user.toObject()
         delete userObject.password
-        const token = jwt.sign(userObject, 'super-secret-password')
+        // TODO this is not supposed to be here
+        const token = jwt.sign(userObject.username, 'super-secret-password')
         console.log({token})
         res.json({
             token,

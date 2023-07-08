@@ -35,7 +35,8 @@ const checkAuth = (req,res,next) => {
 
     //Decoding the token
     const decodedToken = jwt.verify(token,"super-secret-password" );
-    req.username = decodedToken.username
+    req.username = decodedToken
+        console.log({decodedToken, reqUsername: req.username})
     return next()
     } catch(e) {
         console.error(e)

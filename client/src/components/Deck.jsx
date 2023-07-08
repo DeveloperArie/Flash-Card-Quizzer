@@ -30,7 +30,6 @@ export default function Deck(){
         setCards(newDeck.cards)
     }
     function handleFlipCard(index) {
-        
         const updatedCards = [...cards]
         updatedCards[index].flip = !updatedCards[index].flip
         setCards(updatedCards)

@@ -24,6 +24,8 @@ export const CredentialsContext = React.createContext({
 
 function App() {
     const tokenFromLocalstorage = localStorage.getItem("token") || "";
+    // credentials means the token
+    // TODO refactor it to the user object soon.
     const [token, setToken] = useState(tokenFromLocalstorage)
     const [username, setUsername] = useState("")
 

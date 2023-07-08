@@ -14,6 +14,7 @@ export async function registerUserCon(req, res){
     const u = await UserModel.create({username, password})
     const userObject = u.toObject()
     delete userObject.password
+    console.log({userObject})
     const token = jwt.sign(username, 'super-secret-password')
     console.log({token})
     res.json({
